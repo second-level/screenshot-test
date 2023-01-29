@@ -4,6 +4,7 @@
 #include <QGuiApplication>
 #include <QWindow>
 #include <QPixmap>
+#include <QDesktopWidget>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -30,7 +31,7 @@ void MainWindow::on_pushButton_clicked()
 
     QApplication::beep();
 
-    QPixmap originalPixmap = screen->grabWindow(0);
+    QPixmap originalPixmap = screen->grabWindow(QApplication::desktop()->internalWinId(), 0, 0, 200, 200);
     ui->label->setPixmap(originalPixmap);
 }
 
