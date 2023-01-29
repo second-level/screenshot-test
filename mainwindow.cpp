@@ -22,11 +22,11 @@ void MainWindow::on_pushButton_clicked()
 {
     QScreen *screen = QGuiApplication::primaryScreen();
 
-    if (const QWindow *window = windowHandle())
-        screen = window->screen();
+//    if (const QWindow *window = windowHandle())
+//        screen = window->screen();
 
-    if (!screen)
-        return;
+//    if (!screen)
+//        return;
 
     QApplication::beep();
 
