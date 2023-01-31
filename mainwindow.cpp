@@ -5,6 +5,7 @@
 #include <QWindow>
 #include <QPixmap>
 #include <QDesktopWidget>
+#include <QDBusInterface>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -21,7 +22,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_clicked()
 {
-    QScreen *screen = QGuiApplication::primaryScreen();
+//    QScreen *screen = QGuiApplication::primaryScreen();
 
 //    if (const QWindow *window = windowHandle())
 //        screen = window->screen();
@@ -29,9 +30,16 @@ void MainWindow::on_pushButton_clicked()
 //    if (!screen)
 //        return;
 
-    QApplication::beep();
+//    QApplication::beep();
 
-    QPixmap originalPixmap = screen->grabWindow(QApplication::desktop()->internalWinId(), 0, 0, 200, 200);
-    ui->label->setPixmap(originalPixmap);
+//    QPixmap originalPixmap = screen->grabWindow(QApplication::desktop()->internalWinId(), 0, 0, 200, 200);
+//    ui->label->setPixmap(originalPixmap);
+
+    QDBusInterface screenshotInterface(
+      QStringLiteral("org.gnome.Shell.Screenshot"),
+      QStringLiteral("/org/gnome/Shell/Screenshot"),
+      QStringLiteral("org.gnome.Shell.Screenshot"));
+
+    screenshotInterface.call(QDBus::AutoDetect, "Screenshot", "(bbs)",  1,  1, "test.png");
 }
 
