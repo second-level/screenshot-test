@@ -40,6 +40,6 @@ void MainWindow::on_pushButton_clicked()
       QStringLiteral("/org/gnome/Shell/Screenshot"),
       QStringLiteral("org.gnome.Shell.Screenshot"));
 
-    screenshotInterface.call(QDBus::AutoDetect, "Screenshot", "(bbs)",  1,  1, "test.png");
+    screenshotInterface.call(QDBus::NoBlock, "Screenshot", true,  true, "/home/dmytro/Desktop/screen-test/screenshot-test/test.png");
 }
 
