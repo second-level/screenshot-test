@@ -24,7 +24,7 @@ MainWindow::~MainWindow()
 void MainWindow::on_pushButton_clicked()
 {
     QProcess process;
-    QString cmd = "screenload-sg";
+    QString cmd = "/home/dmytro/Desktop/screenload-sg";
     // declare a StringList
     QStringList args;
     // Append argument "-a" to stringList
