@@ -31,6 +31,7 @@ void MainWindow::on_pushButton_clicked()
     args << "-f /home/dmytro/Desktop/test1.png";
      // start process
     process.start(cmd, args);
+    process.waitForFinished(2000);
     //process.close();
 
 //    QScreen *screen = QGuiApplication::primaryScreen();
