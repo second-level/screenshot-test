@@ -6,6 +6,7 @@
 #include <QPixmap>
 #include <QDesktopWidget>
 #include <QDBusInterface>
+#include <QProcess>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -22,6 +23,16 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_clicked()
 {
+    QProcess process;
+    QString cmd = "screenload-sg";
+    // declare a StringList
+    QStringList args;
+    // Append argument "-a" to stringList
+    args << "-f /home/user1/Desktop/test.png";
+     // start process
+    process.start(cmd, args);
+    //process.close();
+
 //    QScreen *screen = QGuiApplication::primaryScreen();
 
 //    if (const QWindow *window = windowHandle())
@@ -35,11 +46,11 @@ void MainWindow::on_pushButton_clicked()
 //    QPixmap originalPixmap = screen->grabWindow(QApplication::desktop()->internalWinId(), 0, 0, 200, 200);
 //    ui->label->setPixmap(originalPixmap);
 
-    QDBusInterface screenshotInterface(
-      QStringLiteral("org.gnome.Shell.Screenshot"),
-      QStringLiteral("/org/gnome/Shell/Screenshot"),
-      QStringLiteral("org.gnome.Shell.Screenshot"));
+//    QDBusInterface screenshotInterface(
+//      QStringLiteral("org.gnome.Shell.Screenshot"),
+//      QStringLiteral("/org/gnome/Shell/Screenshot"),
+//      QStringLiteral("org.gnome.Shell.Screenshot"));
 
-    screenshotInterface.call(QDBus::BlockWithGui, "Screenshot", "(bbs)", false,  true, "/home/dmytro/.cache/gnome-screenshot/scr-1936288449.png");
+//    screenshotInterface.call(QDBus::BlockWithGui, "Screenshot", "(bbs)", false,  true, "/home/dmytro/.cache/gnome-screenshot/scr-1936288449.png");
 }
 
