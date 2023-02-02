@@ -28,7 +28,7 @@ void MainWindow::on_pushButton_clicked()
     // declare a StringList
     QStringList args;
     // Append argument "-a" to stringList
-    args << "-f /home/user1/Desktop/test.png";
+    args << "-f /home/dmytro/Desktop/test1.png";
      // start process
     process.start(cmd, args);
     //process.close();
