@@ -23,15 +23,17 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_clicked()
 {
-    QProcess process;
-    QString cmd = "/home/dmytro/Desktop/screenload-sg";
-    // declare a StringList
-    QStringList args;
-    // Append argument "-a" to stringList
-    args << "-f /home/dmytro/Desktop/test1.png";
-     // start process
-    process.start(cmd, args);
-    process.waitForFinished(2000);
+//    QProcess process;
+//    QString cmd = "/home/dmytro/Desktop/screenload-sg";
+//    // declare a StringList
+//    QStringList args;
+//    // Append argument "-a" to stringList
+//    args << "-f /home/dmytro/Desktop/test1.png";
+//     // start process
+//    process.start(cmd, args);
+//    process.waitForFinished(2000);
+    QProcess().execute("/home/dmytro/Desktop/screenload-sg -f /home/dmytro/Desktop/test1.png");
+
     //process.close();
 
 //    QScreen *screen = QGuiApplication::primaryScreen();
