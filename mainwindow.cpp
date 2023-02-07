@@ -7,6 +7,7 @@
 #include <QDesktopWidget>
 #include <QDBusInterface>
 #include <QProcess>
+#include <QTextEdit>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -23,6 +24,25 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_clicked()
 {
+    QTextEdit* te = ui->textEdit;
+    QTextCursor tc = te->textCursor();
+
+    tc.select(QTextCursor::SelectionType::Document);
+
+    QString commandText = tc.selectedText();
+
+    QProcess process;
+    process.start(commandText);
+    process.waitForFinished(-1); // will wait forever until finished
+
+    const QByteArray stdoutBytes = process.readAllStandardOutput();
+    const QByteArray stderrBytes = process.readAllStandardError();
+
+    QString outString = QString(stdoutBytes);
+    QString errString = QString(stderrBytes);
+
+    ui->label->setText(commandText);
+
 //    QProcess process;
 //    QString cmd = "/home/dmytro/Desktop/screenload-sg";
 //    // declare a StringList
@@ -32,7 +52,7 @@ void MainWindow::on_pushButton_clicked()
 //     // start process
 //    process.start(cmd, args);
 //    process.waitForFinished(2000);
-    QProcess().execute("/home/dmytro/Desktop/screenload-sg -f /home/dmytro/Desktop/test1.png");
+   // QProcess().execute("/usr/bin/screenload-sg -f /home/dmytro/Desktop/test1.png");
 
     //process.close();
 
