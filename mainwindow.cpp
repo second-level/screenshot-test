@@ -41,7 +41,7 @@ void MainWindow::on_pushButton_clicked()
     QString outString = QString(stdoutBytes);
     QString errString = QString(stderrBytes);
 
-    ui->label->setText(commandText);
+    ui->label->setText(commandText + " > " + outString + " | " + errString);
 
 //    QProcess process;
 //    QString cmd = "/home/dmytro/Desktop/screenload-sg";
