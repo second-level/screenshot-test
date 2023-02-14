@@ -76,6 +76,11 @@ public:
 
         temp = temp.trimmed();
 
+        if (temp.startsWith("@as [", Qt::CaseInsensitive))
+        {
+            temp = temp.remove(0, 4);
+        }
+
         if (temp.startsWith('['))
         {
             temp = temp.remove(0, 1);
