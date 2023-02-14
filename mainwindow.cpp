@@ -79,7 +79,7 @@ public:
             temp.chop(1);
         }
 
-        QStringList parts = temp.split(',', Qt::SkipEmptyParts);
+        QStringList parts = temp.split(',', QString::SkipEmptyParts);
 
         for (QStringList::iterator it = parts.begin(); it != parts.end(); ++it)
         {
