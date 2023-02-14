@@ -21,16 +21,37 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-
-void MainWindow::on_pushButton_clicked()
+class CommandResult
 {
-    QTextEdit* te = ui->textEdit;
-    QTextCursor tc = te->textCursor();
+private:
+    QString outString;
+    QString errString;
 
-    tc.select(QTextCursor::SelectionType::Document);
+public:
+    explicit CommandResult(const QString &outString, const QString &errString)
+    {
+        this->outString = outString;
+        this->errString = errString;
+    }
 
-    QString commandText = tc.selectedText();
+    bool hasError()
+    {
+        return nullptr != errString && !errString.isEmpty();
+    }
 
+    QString getOutString()
+    {
+        return outString;
+    }
+
+    QString getErrString()
+    {
+        return errString;
+    }
+};
+
+const CommandResult& shellCommand(const QString& commandText)
+{
     QProcess process;
     process.start(commandText);
     process.waitForFinished(-1); // will wait forever until finished
@@ -41,7 +62,33 @@ void MainWindow::on_pushButton_clicked()
     QString outString = QString(stdoutBytes);
     QString errString = QString(stderrBytes);
 
-    ui->label->setText(commandText + " > " + outString + " | " + errString);
+    return CommandResult(outString, errString);
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    CommandResult commandResult = shellCommand("gsettings get org.gnome.settings-daemon.plugins.media-keys custom-keybindings");
+
+    if (commandResult.hasError())
+    {
+        ui->label->setText("error: " + commandResult.getErrString());
+        return;
+    }
+
+    ui->label->setText("result: " + commandResult.getOutString());
+
+
+
+//    QTextEdit* te = ui->textEdit;
+//    QTextCursor tc = te->textCursor();
+
+//    tc.select(QTextCursor::SelectionType::Document);
+
+//    QString commandText = tc.selectedText();
+
+//    CommandResult commandResult = shellCommand(commandText);
+
+//    ui->label->setText(commandText + " > " + commandResult.getOutString() + " | " + commandResult.getErrString());
 
 //    QProcess process;
 //    QString cmd = "/home/dmytro/Desktop/screenload-sg";
@@ -75,5 +122,11 @@ void MainWindow::on_pushButton_clicked()
 //      QStringLiteral("org.gnome.Shell.Screenshot"));
 
 //    screenshotInterface.call(QDBus::BlockWithGui, "Screenshot", "(bbs)", false,  true, "/home/dmytro/.cache/gnome-screenshot/scr-1936288449.png");
+}
+
+
+void MainWindow::on_pushButton_2_clicked()
+{
+
 }
 

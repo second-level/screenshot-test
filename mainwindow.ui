@@ -18,22 +18,22 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>50</y>
+      <y>20</y>
       <width>75</width>
       <height>24</height>
      </rect>
     </property>
     <property name="text">
-     <string>PushButton</string>
+     <string>GetInfo</string>
     </property>
    </widget>
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
       <x>60</x>
-      <y>90</y>
+      <y>150</y>
       <width>671</width>
-      <height>441</height>
+      <height>381</height>
      </rect>
     </property>
     <property name="text">
@@ -51,6 +51,19 @@
       <width>621</width>
       <height>61</height>
      </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_2">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>90</y>
+      <width>331</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Set or Reset Hotkey</string>
     </property>
    </widget>
   </widget>
