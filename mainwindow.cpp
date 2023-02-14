@@ -233,12 +233,12 @@ void MainWindow::on_pushButton_2_clicked()
         if (commandResult.hasError()) // Ubuntu 20 or 18
         {
             commandResult = shellCommand("gsettings get org.gnome.settings-daemon.plugins.media-keys screenshot");
+
             QString outString = commandResult.getOutString();
             QString value = outString.replace("Print", "");
 
-            ui->label->setText("value > " + value);
-
             QString setCommand = QString("gsettings set org.gnome.settings-daemon.plugins.media-keys screenshot \"%1\"").arg(value);
+            shellCommand(setCommand);
         }
         else
             shellCommand("gsettings set org.gnome.shell.keybindings show-screenshot-ui \"['']\"");
