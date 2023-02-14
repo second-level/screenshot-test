@@ -142,6 +142,9 @@ bool isCustomKeyExists()
     QString bindingCommand = QString("gsettings get org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/screenload/ binding");
     CommandResult bindingCommandResult = shellCommand(bindingCommand);
 
+    if (bindingCommandResult.hasError())
+        return false;
+
     return !bindingCommandResult.getClearOutString().isEmpty();
 }
 
