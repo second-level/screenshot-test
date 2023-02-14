@@ -8,6 +8,7 @@
 #include <QDBusInterface>
 #include <QProcess>
 #include <QTextEdit>
+#include <QRegularExpression>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -48,6 +49,29 @@ public:
     {
         return errString;
     }
+
+    QStringList getStringList()
+    {
+        QString temp = outString;
+
+        if (temp.startsWith('['))
+            temp = temp.remove(0, 1);
+
+        if (temp.endsWith(']'))
+            temp.chop(1);
+
+        QStringList parts = temp.split(',', Qt::SkipEmptyParts);
+
+        for (auto it = parts.begin(); it != parts.end(); ++it)
+        {
+            QString& part = *it;
+            part = part.trimmed(); // Удаляем пробелы в начале и в конце
+            part.remove(QRegularExpression("^'")); // Удаляем одинарную кавычку в начале
+            part.remove(QRegularExpression("'$")); // Удаляем одинарную кавычку в конце
+        }
+
+        return parts;
+    }
 };
 
 CommandResult shellCommand(const QString& commandText)
@@ -75,7 +99,9 @@ void MainWindow::on_pushButton_clicked()
         return;
     }
 
-    ui->label->setText("result: " + commandResult.getOutString());
+    QStringList sl = commandResult.getStringList();
+
+    ui->label->setText("result: " + sl[0]);
 
 
 
