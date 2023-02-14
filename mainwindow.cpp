@@ -223,10 +223,26 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::on_pushButton_2_clicked()
 {
+    shellCommand("gsettings reset org.gnome.settings-daemon.plugins.media-keys screenshot");
+    shellCommand("gsettings reset org.gnome.shell.keybindings show-screenshot-ui");
+
     if (!isCustomBindingExists())
     {
-        shellCommand("gsettings set org.gnome.shell.keybindings show-screenshot-ui \"['']\"");
-        shellCommand("gsettings set org.gnome.settings-daemon.plugins.media-keys screenshot \"['']\""); // Ubuntu 20
+        CommandResult commandResult = shellCommand("gsettings get org.gnome.shell.keybindings show-screenshot-ui");
+
+        if (commandResult.hasError())
+        {
+            commandResult = shellCommand("gsettings get org.gnome.settings-daemon.plugins.media-keys screenshot");
+            QString outString = commandResult.getOutString();
+            QString value = outString.replace("Print", "");
+
+            QString setCommand = QString("gsettings set org.gnome.settings-daemon.plugins.media-keys screenshot \"%1\"").arg(value);
+        }
+        else
+            shellCommand("gsettings set org.gnome.shell.keybindings show-screenshot-ui \"['']\"");
+
+        //shellCommand("gsettings set org.gnome.shell.keybindings show-screenshot-ui \"['']\"");
+        //shellCommand("gsettings set org.gnome.settings-daemon.plugins.media-keys screenshot \"['']\""); // Ubuntu 20
         //shellCommand("gsettings set org.gnome.settings-daemon.plugins.media-keys screenshot \"''\""); // Ubuntu 18
 
         setCustomKeybindingsIfNeeded();
@@ -239,8 +255,12 @@ void MainWindow::on_pushButton_2_clicked()
     {
         shellCommand("gsettings reset org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/screenload/ binding");
 
-        shellCommand("gsettings reset org.gnome.settings-daemon.plugins.media-keys screenshot");
-        shellCommand("gsettings reset org.gnome.shell.keybindings show-screenshot-ui");
+//        shellCommand("gsettings reset org.gnome.settings-daemon.plugins.media-keys screenshot");
+//        shellCommand("gsettings reset org.gnome.shell.keybindings show-screenshot-ui");
+
+
+
+
 
 //        shellCommand("gsettings set org.gnome.settings-daemon.plugins.media-keys screenshot \"['Print']\""); // Old OS.
 //        shellCommand("gsettings set org.gnome.shell.keybindings show-screenshot-ui \"['Print']\"");
