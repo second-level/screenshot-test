@@ -50,7 +50,7 @@ public:
     }
 };
 
-const CommandResult& shellCommand(const QString& commandText)
+CommandResult shellCommand(const QString& commandText)
 {
     QProcess process;
     process.start(commandText);
