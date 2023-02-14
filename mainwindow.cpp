@@ -228,9 +228,9 @@ void MainWindow::on_pushButton_2_clicked()
 
     if (!isCustomBindingExists())
     {
-        CommandResult commandResult = shellCommand("gsettings get org.gnome.shell.keybindings show-screenshot-ui");
+        CommandResult commandResult = shellCommand("gsettings get org.gnome.shell.keybindings show-screenshot-ui"); // Ubuntu 22
 
-        if (commandResult.hasError())
+        if (commandResult.hasError()) // Ubuntu 20 or 18
         {
             commandResult = shellCommand("gsettings get org.gnome.settings-daemon.plugins.media-keys screenshot");
             QString outString = commandResult.getOutString();
