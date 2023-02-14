@@ -150,7 +150,8 @@ bool isCustomKeyExists()
 
 void MainWindow::on_pushButton_clicked()
 {
-    ui->label->setText("result: " + isCustomKeyExists());
+    QString res = isCustomKeyExists() ? "Yes" : "No";
+    ui->label->setText("result: " + res);
 
 //    QTextEdit* te = ui->textEdit;
 //    QTextCursor tc = te->textCursor();
@@ -200,7 +201,7 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::on_pushButton_2_clicked()
 {
-    if (isCustomKeyExists())
+    if (!isCustomKeyExists())
     {
         shellCommand("gsettings set org.gnome.shell.keybindings show-screenshot-ui '[]'");
         shellCommand("gsettings set org.gnome.settings-daemon.plugins.media-keys screenshot ''"); // Old OS.
