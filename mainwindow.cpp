@@ -203,7 +203,7 @@ void MainWindow::on_pushButton_2_clicked()
 {
     if (!isCustomKeyExists())
     {
-        shellCommand("gsettings set org.gnome.shell.keybindings show-screenshot-ui '[]'");
+        shellCommand("gsettings set org.gnome.shell.keybindings show-screenshot-ui \"[]\"");
         shellCommand("gsettings set org.gnome.settings-daemon.plugins.media-keys screenshot ''"); // Old OS.
 
         shellCommand("gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings \"['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/screenload/']\"");
