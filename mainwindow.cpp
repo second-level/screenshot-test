@@ -236,6 +236,8 @@ void MainWindow::on_pushButton_2_clicked()
             QString outString = commandResult.getOutString();
             QString value = outString.replace("Print", "");
 
+            ui->label->setText("value > " + value);
+
             QString setCommand = QString("gsettings set org.gnome.settings-daemon.plugins.media-keys screenshot \"%1\"").arg(value);
         }
         else
