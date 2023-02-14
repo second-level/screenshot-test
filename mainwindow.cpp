@@ -54,6 +54,8 @@ public:
     {
         QString temp = outString;
 
+        temp = temp.trimmed();
+
         if (temp.startsWith('\''))
         {
             temp = temp.remove(0, 1);
@@ -67,6 +69,8 @@ public:
     {
         QString temp = outString;
 
+        temp = temp.trimmed();
+
         if (temp.startsWith('['))
         {
             temp = temp.remove(0, 1);
@@ -78,7 +82,8 @@ public:
         for (QStringList::iterator it = parts.begin(); it != parts.end(); ++it)
         {
             QString& part = *it;
-            part = part.trimmed(); // Удаляем пробелы в начале и в конце
+
+            part = part.trimmed();
 
             if (part.startsWith('\''))
             {
@@ -119,6 +124,8 @@ void MainWindow::on_pushButton_clicked()
     QStringList keybindings = commandResult.getStringList();
 
     QString result = "";
+
+    result += keybindings.count() + " ";
 
     for (QStringList::iterator it = keybindings.begin(); it != keybindings.end(); ++it)
     {
