@@ -55,31 +55,16 @@ public:
         return errString;
     }
 
-    QString getClearOutString()
-    {
-        QString temp = outString;
-
-        temp = temp.trimmed();
-
-        if (temp.startsWith('\''))
-        {
-            temp = temp.remove(0, 1);
-            temp.chop(1);
-        }
-
-        return temp;
-    }
-
     QStringList getStringList()
     {
         QString temp = outString;
 
         temp = temp.trimmed();
 
-        if (temp.startsWith("@as [", Qt::CaseInsensitive))
-        {
-            temp = temp.remove(0, 4);
-        }
+        if (temp.startsWith("@as", Qt::CaseInsensitive))
+            temp = temp.remove(0, 3);
+
+        temp = temp.trimmed();
 
         if (temp.startsWith('['))
         {
@@ -140,36 +125,29 @@ CommandResult shellCommand(const QString& commandText)
 //    return QString::null;
 //}
 
-void createCustomKeyIfNeeded()
+void setCustomKeybindingsIfNeeded()
 {
-    CommandResult keybindingsResult = shellCommand("gsettings get org.gnome.settings-daemon.plugins.media-keys custom-keybindings");
+    CommandResult getKeybindingsCommandResult = shellCommand("gsettings get org.gnome.settings-daemon.plugins.media-keys custom-keybindings");
 
-    if (keybindingsResult.hasError() || keybindingsResult.isEmpty())
-    {
-        shellCommand("gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings \"['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/screenload/']\"");
-        return;
-    }
+    QStringList keybindings;
 
-    QStringList keybindings = keybindingsResult.getStringList();
+    if (!getKeybindingsCommandResult.hasError() && !getKeybindingsCommandResult.isEmpty())
+        keybindings = getKeybindingsCommandResult.getStringList();
 
-    if (keybindings.isEmpty())
-    {
-        shellCommand("gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings \"['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/screenload/']\"");
-        return;
-    }
+    const QString screenloadKeybinding = "'/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/screenload/'";
 
-    if (keybindings.contains("'/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/screenload/'", Qt::CaseInsensitive))
+    if (!keybindings.isEmpty() && keybindings.contains(screenloadKeybinding, Qt::CaseInsensitive))
         return;
 
-    keybindings.append("'/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/screenload/'");
+    keybindings.append(screenloadKeybinding);
 
-    QString combinedKeybindings = keybindings.join(',');
+    QString keybindingsLine = keybindings.join(',');
 
-    QString setKeybindingsCommand = QString("gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings \"[%1]\"").arg(combinedKeybindings);
+    QString setKeybindingsCommand = QString("gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings \"[%1]\"").arg(keybindingsLine);
     shellCommand(setKeybindingsCommand);
 }
 
-bool isCustomKeyExists()
+bool isCustomBindingExists()
 {
     QString bindingCommand = QString("gsettings get org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/screenload/ binding");
     CommandResult bindingCommandResult = shellCommand(bindingCommand);
@@ -177,12 +155,17 @@ bool isCustomKeyExists()
     if (bindingCommandResult.hasError())
         return false;
 
-    return !bindingCommandResult.getClearOutString().isEmpty();
+    QString outString = bindingCommandResult.getOutString();
+
+    if (0 == outString.compare("''", Qt::CaseInsensitive))
+        return false;
+
+    return true;
 }
 
 void MainWindow::on_pushButton_clicked()
 {
-    QString res = isCustomKeyExists() ? "Yes" : "No";
+    QString res = isCustomBindingExists() ? "Yes" : "No";
     ui->label->setText("result: " + res);
 
 //    QTextEdit* te = ui->textEdit;
@@ -233,54 +216,12 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::on_pushButton_2_clicked()
 {
-    if (!isCustomKeyExists())
+    if (!isCustomBindingExists())
     {
         shellCommand("gsettings set org.gnome.shell.keybindings show-screenshot-ui \"[]\"");
         shellCommand("gsettings set org.gnome.settings-daemon.plugins.media-keys screenshot ''"); // Old OS.
 
-        //shellCommand("gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings \"['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/screenload/']\"");
-        //createCustomKeyIfNeeded();
-
-
-        CommandResult keybindingsResult = shellCommand("gsettings get org.gnome.settings-daemon.plugins.media-keys custom-keybindings");
-
-        if (keybindingsResult.hasError() || keybindingsResult.isEmpty())
-        {
-            ui->label->setText("hasError");
-            shellCommand("gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings \"['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/screenload/']\"");
-        }
-        else
-        {
-            QStringList keybindings = keybindingsResult.getStringList();
-
-            if (keybindings.isEmpty())
-            {
-                ui->label->setText("keybindings isEmpty");
-
-                shellCommand("gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings \"['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/screenload/']\"");
-            }
-            else
-            {
-                if (!keybindings.contains("'/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/screenload/'", Qt::CaseInsensitive))
-                {
-                    ui->label->setText("!keybindings.contains");
-
-                    keybindings.append("'/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/screenload/'");
-
-                    QString combinedKeybindings = keybindings.join(',');
-                    ui->label->setText(combinedKeybindings);
-
-                    QString setKeybindingsCommand = QString("gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings \"[%1]\"").arg(combinedKeybindings);
-                    shellCommand(setKeybindingsCommand);
-                }
-            }
-        }
-
-
-
-
-
-        //
+        setCustomKeybindingsIfNeeded();
 
         shellCommand("gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/screenload/ name 'screenload'");
         shellCommand("gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/screenload/ command \"/usr/bin/screenload gui\"");
