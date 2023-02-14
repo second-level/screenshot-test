@@ -55,6 +55,13 @@ public:
         return errString;
     }
 
+    QString getCleanOutString()
+    {
+        QString temp = outString;
+        temp = temp.trimmed();
+        return temp;
+    }
+
     QStringList getStringList()
     {
         QString temp = outString;
@@ -155,9 +162,9 @@ bool isCustomBindingExists()
     if (bindingCommandResult.hasError())
         return false;
 
-    QString outString = bindingCommandResult.getOutString();
+    QString cleanOutString = bindingCommandResult.getCleanOutString();
 
-    if (0 == outString.compare("''", Qt::CaseInsensitive))
+    if (0 == cleanOutString.compare("''", Qt::CaseInsensitive))
         return false;
 
     return true;
