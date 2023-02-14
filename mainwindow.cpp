@@ -226,8 +226,8 @@ void MainWindow::on_pushButton_2_clicked()
     if (!isCustomBindingExists())
     {
         shellCommand("gsettings set org.gnome.shell.keybindings show-screenshot-ui \"['']\"");
-        //shellCommand("gsettings set org.gnome.settings-daemon.plugins.media-keys screenshot \"['']\""); // Old OS.
-        shellCommand("gsettings set org.gnome.settings-daemon.plugins.media-keys screenshot \"''\""); // Old OS.
+        shellCommand("gsettings set org.gnome.settings-daemon.plugins.media-keys screenshot \"['']\""); // Ubuntu 20
+        //shellCommand("gsettings set org.gnome.settings-daemon.plugins.media-keys screenshot \"''\""); // Ubuntu 18
 
         setCustomKeybindingsIfNeeded();
 
