@@ -225,8 +225,8 @@ void MainWindow::on_pushButton_2_clicked()
 {
     if (!isCustomBindingExists())
     {
-        shellCommand("gsettings set org.gnome.shell.keybindings show-screenshot-ui \"[]\"");
-        shellCommand("gsettings set org.gnome.settings-daemon.plugins.media-keys screenshot ''"); // Old OS.
+        shellCommand("gsettings set org.gnome.shell.keybindings show-screenshot-ui \"['']\"");
+        shellCommand("gsettings set org.gnome.settings-daemon.plugins.media-keys screenshot \"['']\""); // Old OS.
 
         setCustomKeybindingsIfNeeded();
 
@@ -238,7 +238,7 @@ void MainWindow::on_pushButton_2_clicked()
     {
         shellCommand("gsettings reset org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/screenload/ binding");
 
-        shellCommand("gsettings set org.gnome.settings-daemon.plugins.media-keys screenshot 'Print'"); // Old OS.
+        shellCommand("gsettings set org.gnome.settings-daemon.plugins.media-keys screenshot \"['Print']\""); // Old OS.
         shellCommand("gsettings set org.gnome.shell.keybindings show-screenshot-ui \"['Print']\"");
     }
 }
