@@ -223,11 +223,11 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::on_pushButton_2_clicked()
 {
-    shellCommand("gsettings reset org.gnome.settings-daemon.plugins.media-keys screenshot");
-    shellCommand("gsettings reset org.gnome.shell.keybindings show-screenshot-ui");
-
     if (!isCustomBindingExists())
     {
+        shellCommand("gsettings reset org.gnome.settings-daemon.plugins.media-keys screenshot");
+        shellCommand("gsettings reset org.gnome.shell.keybindings show-screenshot-ui");
+
         CommandResult commandResult = shellCommand("gsettings get org.gnome.shell.keybindings show-screenshot-ui"); // Ubuntu 22
 
         if (commandResult.hasError()) // Ubuntu 20 or 18
@@ -241,7 +241,7 @@ void MainWindow::on_pushButton_2_clicked()
             shellCommand(setCommand);
         }
         else
-            shellCommand("gsettings set org.gnome.shell.keybindings show-screenshot-ui \"['']\"");
+            shellCommand("gsettings set org.gnome.shell.keybindings show-screenshot-ui \"['']\""); // Ubuntu 22
 
         //shellCommand("gsettings set org.gnome.shell.keybindings show-screenshot-ui \"['']\"");
         //shellCommand("gsettings set org.gnome.settings-daemon.plugins.media-keys screenshot \"['']\""); // Ubuntu 20
@@ -256,6 +256,9 @@ void MainWindow::on_pushButton_2_clicked()
     else
     {
         shellCommand("gsettings reset org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/screenload/ binding");
+
+        shellCommand("gsettings reset org.gnome.settings-daemon.plugins.media-keys screenshot");
+        shellCommand("gsettings reset org.gnome.shell.keybindings show-screenshot-ui");
 
 //        shellCommand("gsettings reset org.gnome.settings-daemon.plugins.media-keys screenshot");
 //        shellCommand("gsettings reset org.gnome.shell.keybindings show-screenshot-ui");
