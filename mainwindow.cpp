@@ -82,14 +82,7 @@ public:
         for (QStringList::iterator it = parts.begin(); it != parts.end(); ++it)
         {
             QString& part = *it;
-
             part = part.trimmed();
-
-            if (part.startsWith('\''))
-            {
-                part = part.remove(0, 1);
-                part.chop(1);
-            }
         }
 
         return parts;
@@ -136,6 +129,31 @@ CommandResult shellCommand(const QString& commandText)
 
 //    return QString::null;
 //}
+
+void createCustomKeyIfNeeded()
+{
+    QString nameCommand = QString("gsettings get org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/screenload/ name");
+    CommandResult nameCommandResult = shellCommand(nameCommand);
+
+    if (nameCommandResult.hasError())
+    {
+        CommandResult keybindingsResult = shellCommand("gsettings get org.gnome.settings-daemon.plugins.media-keys custom-keybindings");
+
+        if (keybindingsResult.hasError())
+        {
+            shellCommand("gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings \"['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/screenload/']\"");
+            return;
+        }
+
+        QStringList keybindings = keybindingsResult.getStringList();
+        keybindings.append("'/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/screenload/'");
+
+        QString combinedKeybindings = keybindings.join(',');
+
+        QString setKeybindingsCommand = QString("gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings \"[%1]\"").arg(combinedKeybindings);
+        shellCommand(setKeybindingsCommand);
+    }
+}
 
 bool isCustomKeyExists()
 {
@@ -206,7 +224,8 @@ void MainWindow::on_pushButton_2_clicked()
         shellCommand("gsettings set org.gnome.shell.keybindings show-screenshot-ui \"[]\"");
         shellCommand("gsettings set org.gnome.settings-daemon.plugins.media-keys screenshot ''"); // Old OS.
 
-        shellCommand("gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings \"['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/screenload/']\"");
+        //shellCommand("gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings \"['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/screenload/']\"");
+        createCustomKeyIfNeeded();
         shellCommand("gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/screenload/ name 'screenload'");
         shellCommand("gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/screenload/ command \"/usr/bin/screenload gui\"");
         shellCommand("gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/screenload/ binding 'Print'");
